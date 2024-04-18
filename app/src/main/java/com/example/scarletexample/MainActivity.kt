@@ -22,37 +22,7 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
 class MainActivity : ComponentActivity() {
-
-    private fun subscribe() {
-        val service = createWebSocketService()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            service.observeWebSocketEvent().collect { event ->
-                when (event) {
-                    is WebSocket.Event.OnConnectionOpened<*> -> {
-                        service.sendMessage(Message(text = "Hello"))
-                    }
-
-                    is WebSocket.Event.OnMessageReceived -> {
-                        println("Received: ${event.message}")
-                    }
-                }
-            }
-        }
-    }
-
-    private fun createWebSocketService(): WebSocketService {
-        val okHttpClient = OkHttpClient.Builder()
-            .build()
-
-        val scarletInstance = Scarlet.Builder()
-            .webSocketFactory(okHttpClient.newWebSocketFactory("wss://example.com/api"))
-            .addMessageAdapterFactory(KotlinSerializationAdapter.Factory())
-            .lifecycle(AndroidLifecycle.ofApplicationForeground(application))
-            .build()
-
-        return scarletInstance.create()
-    }
+    // https://github.com/hpinhal/crypto-tracker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Button(onClick = { subscribe() }) {
-                        Text(text = "subscribe")
-                    }
+
                 }
             }
         }

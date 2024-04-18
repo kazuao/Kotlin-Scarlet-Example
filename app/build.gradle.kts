@@ -1,7 +1,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    kotlin("kapt") version "1.9.23"
+    id("com.google.dagger.hilt.android") version "2.44" apply false
 }
+
+val scarletVersion = "0.1.12"
 
 android {
     namespace = "com.example.scarletexample"
@@ -30,8 +35,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -67,16 +72,27 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Kotlin Coroutines
-    implementation(libs.kotlinx.coroutines.android)
+    // add
+    kapt(libs.artifactId)
+    implementation(libs.hilt.android)
 
-    // Scarlet
+    implementation(libs.moshi.kotlin.v1120)
+    kapt(libs.moshi.kotlin.codegen)
+
+    implementation(libs.okhttp.bom)
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
     implementation(libs.scarlet)
+    implementation(libs.lifecycle.android)
     implementation(libs.websocket.okhttp)
     implementation(libs.message.adapter.moshi)
-    implementation(libs.lifecycle.android)
-    implementation(libs.moshi.kotlin)
+    implementation(libs.stream.adapter.coroutines)
 
-    // kotlinx.serialization
-    implementation(libs.kotlinx.serialization.json.v122)
+    implementation(libs.timber)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
